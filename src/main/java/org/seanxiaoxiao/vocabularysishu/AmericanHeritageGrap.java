@@ -1,7 +1,12 @@
 package org.seanxiaoxiao.vocabularysishu;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,15 +27,30 @@ public class AmericanHeritageGrap {
 
     private static String pageFormat = "http://dict.yqie.com/english/%c/%s.htm";
 
-    private static Pattern traslatePattern = Pattern.compile("\\(\\d+\\)");
+    private static Pattern traslatePattern = Pattern.compile("[\u4E00-\u9FA5]");
 
-    public static void main(String[] args) {
-        getTranslate("abacus");
-        getTranslate("yell");
-        getTranslate("zone");
+    private static Pattern splitPattern = Pattern.compile("，|：|；");
+
+    public static void main(String[] args) throws IOException {
+        List<String> vocabularyList = Utils.getVocabularyList();
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/vocabulary-meaning")));
+        for (String vocabulary : vocabularyList) {
+            System.out.println(vocabulary);
+            if (vocabulary.indexOf(" ") < 0) {
+                List<String> meanings = getTranslate(vocabulary);
+                bw.append(vocabulary).append("\t");
+                for (String meaning : meanings) {
+                    bw.append(meaning + "\t");
+                    System.out.println(meaning);
+                }
+            }
+            bw.append("\n");
+        }
+        bw.close();
     }
 
-    private static void parseTraslate(String pageContent) {
+    private static List<String> parseTraslate(String pageContent) {
+        List<String> meanings = new ArrayList<String>();
         DOMParser parser = new DOMParser();
         try {
             InputSource inputSource = new InputSource(new ByteArrayInputStream(pageContent.getBytes()));
@@ -50,12 +70,11 @@ public class AmericanHeritageGrap {
                     else if (reachRecord && childCount == 1) {
                         break;
                     }
-                    Matcher matcher = traslatePattern.matcher(node.getChildNodes().item(1).getTextContent());
-                    
-                    if (reachRecord && matcher.matches()) {
-                        Node nextNode = tableRows.item(i + 1);
-                        Node nextContent = nextNode.getChildNodes().item(3);
-                        System.out.println(nextContent.getTextContent().trim());
+                    String content = node.getChildNodes().item(3).getTextContent().trim();
+                    Matcher matcher = traslatePattern.matcher(content);
+                    Matcher splitMatcher = splitPattern.matcher(content);
+                    if (matcher.find() && splitMatcher.find()) {
+                        meanings.add(content);
                     }
                 } catch (Exception e) {
                 }
@@ -63,9 +82,10 @@ public class AmericanHeritageGrap {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return meanings;
     }
     
-    private static void getTranslate(String vocabulary) {
+    private static List<String> getTranslate(String vocabulary) {
         String pageUrl = String.format(pageFormat, vocabulary.charAt(0), vocabulary);
         HttpGet method = null;
         try {
@@ -75,10 +95,11 @@ public class AmericanHeritageGrap {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 String page = EntityUtils.toString(entity, "gb2312");
-                parseTraslate(page);
+                return parseTraslate(page);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }
