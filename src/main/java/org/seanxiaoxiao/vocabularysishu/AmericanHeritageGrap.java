@@ -1,10 +1,7 @@
 package org.seanxiaoxiao.vocabularysishu;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -31,22 +28,24 @@ public class AmericanHeritageGrap {
 
     private static Pattern splitPattern = Pattern.compile("，|：|；");
 
+    private static Pattern characterPattern = Pattern.compile("([a-z]+.)（\\S*）");
+
     public static void main(String[] args) throws IOException {
         List<String> vocabularyList = Utils.getVocabularyList();
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/vocabulary-meaning")));
+        //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/vocabulary-meaning")));
         for (String vocabulary : vocabularyList) {
             System.out.println(vocabulary);
             if (vocabulary.indexOf(" ") < 0) {
                 List<String> meanings = getTranslate(vocabulary);
-                bw.append(vocabulary).append("\t");
+                //bw.append(vocabulary).append("\t");
                 for (String meaning : meanings) {
-                    bw.append(meaning + "\t");
+                    //bw.append(meaning + "\t");
                     System.out.println(meaning);
                 }
             }
-            bw.append("\n");
+            //bw.append("\n");
         }
-        bw.close();
+        //bw.close();
     }
 
     private static List<String> parseTraslate(String pageContent) {
@@ -71,6 +70,7 @@ public class AmericanHeritageGrap {
                         break;
                     }
                     String content = node.getChildNodes().item(3).getTextContent().trim();
+                    System.out.println(content);
                     Matcher matcher = traslatePattern.matcher(content);
                     Matcher splitMatcher = splitPattern.matcher(content);
                     if (matcher.find() && splitMatcher.find()) {

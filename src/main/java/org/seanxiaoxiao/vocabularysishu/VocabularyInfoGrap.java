@@ -62,9 +62,16 @@ public class VocabularyInfoGrap {
         List<String> vocabularyList = Utils.getVocabularyList();
         for (String vocabulary : vocabularyList) {
             if (vocabulary.indexOf(" ") < 0) {
+                System.out.println(vocabulary);
                 String phonetic = getPhonetic(vocabulary);
                 String etymology = parseEtymology(vocabulary);
-                bw.append(vocabulary).append("\t").append(phonetic).append("\t").append(etymology);
+                if (etymology != null) {
+                    etymology = etymology.replaceAll("\n", " ");
+                    bw.append(vocabulary).append("\t").append(phonetic).append("\t").append(etymology);
+                }
+                else {
+                    bw.append(vocabulary).append("\t").append(phonetic);
+                }
             }
             bw.append("\n");
         }
