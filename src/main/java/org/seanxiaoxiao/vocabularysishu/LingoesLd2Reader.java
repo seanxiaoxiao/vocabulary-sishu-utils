@@ -1,0 +1,340 @@
+package org.seanxiaoxiao.vocabularysishu;
+
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
+
+/**
+ * Lingoes LD2/LDF File Reader
+ * 
+ * <pre>
+ * Lingoes Format overview:
+ * 
+ * General Information:
+ * - Dictionary data are stored in deflate streams.
+ * - Index group information is stored in an index array in the LD2 file itself.
+ * - Numbers are using little endian byte order.
+ * - Definitions and xml data have UTF-8 or UTF-16LE encodings.
+ * 
+ * LD2 file schema:
+ * - File Header
+ * - File Description
+ * - Additional Information (optional)
+ * - Index Group (corresponds to definitions in dictionary) 
+ * - Deflated Dictionary Streams
+ * -- Index Data
+ * --- Offsets of definitions
+ * --- Offsets of translations
+ * --- Flags
+ * --- References to other translations
+ * -- Definitions
+ * -- Translations (xml)
+ * 
+ * TODO: find encoding / language fields to replace auto-detect of encodings
+ * 
+ * </pre>
+ * 
+ * @author keke
+ * @author Sean
+ * 
+ */
+public class LingoesLd2Reader {
+    private static final String[] AVAIL_ENCODINGS = { "UTF-8", "UTF-16LE", "UTF-16BE" };
+
+    private static List<String> vocabularyList = Utils.getVocabularyList();
+
+    public static void main(String[] args) throws IOException {
+        // download from
+        // https://skydrive.live.com/?cid=a10100d37adc7ad3&sc=documents&id=A10100D37ADC7AD3%211172#cid=A10100D37ADC7AD3&sc=documents
+        String ld2File = "/Users/xiaoxiao/Downloads/Merriam-Webster Collegiate Dictionary.ld2";
+
+        // read lingoes ld2 into byte array
+        ByteArrayOutputStream dataOut = new ByteArrayOutputStream();
+        FileChannel fChannel = new RandomAccessFile(ld2File, "r").getChannel();
+        fChannel.transferTo(0, fChannel.size(), Channels.newChannel(dataOut));
+        fChannel.close();
+
+        // as bytes
+        ByteBuffer dataRawBytes = ByteBuffer.wrap(dataOut.toByteArray());
+        dataRawBytes.order(ByteOrder.LITTLE_ENDIAN);
+
+        System.out.println("文件：" + ld2File);
+        System.out.println("类型：" + new String(dataRawBytes.array(), 0, 4, "ASCII"));
+        System.out.println("版本：" + dataRawBytes.getShort(0x18) + "." + dataRawBytes.getShort(0x1A));
+        System.out.println("ID: 0x" + Long.toHexString(dataRawBytes.getLong(0x1C)));
+
+        int offsetData = dataRawBytes.getInt(0x5C) + 0x60;
+        if (dataRawBytes.limit() > offsetData) {
+            System.out.println("简介地址：0x" + Integer.toHexString(offsetData));
+            int type = dataRawBytes.getInt(offsetData);
+            System.out.println("简介类型：0x" + Integer.toHexString(type));
+            int offsetWithInfo = dataRawBytes.getInt(offsetData + 4) + offsetData + 12;
+            if (type == 3) {
+                // without additional information
+                readDictionary(ld2File, dataRawBytes, offsetData);
+            } else if (dataRawBytes.limit() > offsetWithInfo - 0x1C) {
+                readDictionary(ld2File, dataRawBytes, offsetWithInfo);
+            } else {
+                System.err.println("文件不包含字典数据。网上字典？");
+            }
+        } else {
+            System.err.println("文件不包含字典数据。网上字典？");
+        }
+    }
+
+    private static final long decompress(final String inflatedFile, final ByteBuffer data, final int offset,
+            final int length, final boolean append) throws IOException {
+        Inflater inflator = new Inflater();
+        InflaterInputStream in = new InflaterInputStream(new ByteArrayInputStream(data.array(), offset, length),
+                inflator, 1024 * 8);
+        FileOutputStream out = new FileOutputStream(inflatedFile, append);
+        writeInputStream(in, out);
+        long bytesRead = inflator.getBytesRead();
+        in.close();
+        out.close();
+        inflator.end();
+        return bytesRead;
+    }
+
+    private static final String[] detectEncodings(final ByteBuffer inflatedBytes, final int offsetWords,
+            final int offsetXml, final int defTotal, final int dataLen, final int[] idxData, final String[] defData)
+            throws UnsupportedEncodingException {
+        final int tests = Math.min(defTotal, 10);
+        int defEnc = 0;
+        int xmlEnc = 0;
+        Pattern p = Pattern.compile("^.*[\\x00-\\x1f].*$");
+        for (int i = 0; i < tests; i++) {
+            readDefinitionData(inflatedBytes, offsetWords, offsetXml, dataLen, AVAIL_ENCODINGS[defEnc],
+                    AVAIL_ENCODINGS[xmlEnc], idxData, defData, i);
+            if (p.matcher(defData[0]).matches()) {
+                if (defEnc < AVAIL_ENCODINGS.length - 1) {
+                    defEnc++;
+                }
+                i = 0;
+            }
+            if (p.matcher(defData[1]).matches()) {
+                if (xmlEnc < AVAIL_ENCODINGS.length - 1) {
+                    xmlEnc++;
+                }
+                i = 0;
+            }
+        }
+        System.out.println("词组编码：" + AVAIL_ENCODINGS[defEnc]);
+        System.out.println("XML编码：" + AVAIL_ENCODINGS[xmlEnc]);
+        return new String[] { AVAIL_ENCODINGS[defEnc], AVAIL_ENCODINGS[xmlEnc] };
+    }
+
+    private static final void extract(final String inflatedFile, final String indexFile,
+            final String extractedWordsFile, final String extractedXmlFile, final String extractedOutputFile,
+            final int[] idxArray, final int offsetDefs, final int offsetXml) throws IOException, FileNotFoundException,
+            UnsupportedEncodingException {
+        System.out.println("写入'" + extractedOutputFile + "'。。。");
+
+        FileWriter indexWriter = new FileWriter(indexFile);
+        FileWriter defsWriter = new FileWriter(extractedWordsFile);
+        FileWriter xmlWriter = new FileWriter(extractedXmlFile);
+        FileWriter outputWriter = new FileWriter(extractedOutputFile);
+        // read inflated data
+        ByteArrayOutputStream dataOut = new ByteArrayOutputStream();
+        FileChannel fChannel = new RandomAccessFile(inflatedFile, "r").getChannel();
+        fChannel.transferTo(0, fChannel.size(), Channels.newChannel(dataOut));
+        fChannel.close();
+        ByteBuffer dataRawBytes = ByteBuffer.wrap(dataOut.toByteArray());
+        dataRawBytes.order(ByteOrder.LITTLE_ENDIAN);
+
+        final int dataLen = 10;
+        final int defTotal = offsetDefs / dataLen - 1;
+
+        String[] words = new String[defTotal];
+        int[] idxData = new int[6];
+        String[] defData = new String[2];
+
+        final String[] encodings = detectEncodings(dataRawBytes, offsetDefs, offsetXml, defTotal, dataLen, idxData,
+                defData);
+
+        dataRawBytes.position(8);
+        int counter = 0;
+        final String defEncoding = encodings[0];
+        final String xmlEncoding = encodings[1];
+        for (int i = 0; i < defTotal; i++) {
+            readDefinitionData(dataRawBytes, offsetDefs, offsetXml, dataLen, defEncoding, xmlEncoding, idxData,
+                    defData, i);
+
+            words[i] = defData[0];
+            if (vocabularyList.contains(defData[0])) {
+                defsWriter.write(defData[0]);
+                defsWriter.write("\n");
+    
+                xmlWriter.write(defData[1]);
+                xmlWriter.write("\n");
+    
+                outputWriter.write(defData[0]);
+                outputWriter.write("=");
+                outputWriter.write(defData[1]);
+                outputWriter.write("\n");
+
+                String outputFileDir = "/Users/xiaoxiao/workspace/resource/" + defData[0].charAt(0);
+                File dir = new File(outputFileDir);
+                dir.mkdirs();
+                File file = new File(outputFileDir + "/" + defData[0] + ".xml");
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+                bufferedWriter.write("<AC>" + defData[1] + "</AC>");
+                bufferedWriter.close();
+                System.out.println(defData[0] + " = " + defData[1]);
+            }
+            counter++;
+        }
+
+        for (int i = 0; i < idxArray.length; i++) {
+            int idx = idxArray[i];
+            indexWriter.write(words[idx]);
+            indexWriter.write(", ");
+            indexWriter.write(String.valueOf(idx));
+            indexWriter.write("\n");
+        }
+        indexWriter.close();
+        defsWriter.close();
+        xmlWriter.close();
+        outputWriter.close();
+        System.out.println("成功读出" + counter + "组数据。");
+    }
+
+    private static final void getIdxData(final ByteBuffer dataRawBytes, final int position, final int[] wordIdxData) {
+        dataRawBytes.position(position);
+        wordIdxData[0] = dataRawBytes.getInt();
+        wordIdxData[1] = dataRawBytes.getInt();
+        wordIdxData[2] = dataRawBytes.get() & 0xff;
+        wordIdxData[3] = dataRawBytes.get() & 0xff;
+        wordIdxData[4] = dataRawBytes.getInt();
+        wordIdxData[5] = dataRawBytes.getInt();
+    }
+
+    private static final void inflate(final ByteBuffer dataRawBytes, final List<Integer> deflateStreams,
+            final String inflatedFile) {
+        System.out.println("解压缩'" + deflateStreams.size() + "'个数据流至'" + inflatedFile + "'。。。");
+        int startOffset = dataRawBytes.position();
+        int offset = -1;
+        int lastOffset = startOffset;
+        boolean append = false;
+        try {
+            for (Integer offsetRelative : deflateStreams) {
+                offset = startOffset + offsetRelative.intValue();
+                decompress(inflatedFile, dataRawBytes, lastOffset, offset - lastOffset, append);
+                append = true;
+                lastOffset = offset;
+            }
+        } catch (Throwable e) {
+            System.err.println("解压缩失败: 0x" + Integer.toHexString(offset) + ": " + e.toString());
+        }
+    }
+
+    private static final void readDefinitionData(final ByteBuffer inflatedBytes, final int offsetWords,
+            final int offsetXml, final int dataLen, final String wordEncoding, final String xmlEncoding,
+            final int[] idxData, final String[] defData, final int i) throws UnsupportedEncodingException {
+        getIdxData(inflatedBytes, dataLen * i, idxData);
+        int lastWordPos = idxData[0];
+        int lastXmlPos = idxData[1];
+
+        int refs = idxData[3];
+        int currentWordOffset = idxData[4];
+        int currenXmlOffset = idxData[5];
+        
+        String xml = new String(inflatedBytes.array(), offsetXml + lastXmlPos, currenXmlOffset - lastXmlPos,
+                xmlEncoding);
+        while (refs-- > 0) {
+            int ref = inflatedBytes.getInt(offsetWords + lastWordPos);
+            getIdxData(inflatedBytes, dataLen * ref, idxData);
+            lastXmlPos = idxData[1];
+            currenXmlOffset = idxData[5];
+            if (xml.isEmpty()) {
+                xml = new String(inflatedBytes.array(), offsetXml + lastXmlPos, currenXmlOffset - lastXmlPos,
+                        xmlEncoding);
+            } else {
+                xml = new String(inflatedBytes.array(), offsetXml + lastXmlPos, currenXmlOffset - lastXmlPos,
+                        xmlEncoding) + xml;
+            }
+            lastWordPos += 4;
+        }
+        defData[1] = xml;
+
+        String word = new String(inflatedBytes.array(), offsetWords + lastWordPos, currentWordOffset - lastWordPos,
+                wordEncoding);
+        defData[0] = word;
+    }
+
+    private static final void readDictionary(final String ld2File, final ByteBuffer dataRawBytes,
+            final int offsetWithIndex) throws IOException, FileNotFoundException, UnsupportedEncodingException {
+        System.out.println("词典类型：0x" + Integer.toHexString(dataRawBytes.getInt(offsetWithIndex)));
+        int limit = dataRawBytes.getInt(offsetWithIndex + 4) + offsetWithIndex + 8;
+        int offsetIndex = offsetWithIndex + 0x1C;
+        int offsetCompressedDataHeader = dataRawBytes.getInt(offsetWithIndex + 8) + offsetIndex;
+        int inflatedWordsIndexLength = dataRawBytes.getInt(offsetWithIndex + 12);
+        int inflatedWordsLength = dataRawBytes.getInt(offsetWithIndex + 16);
+        int inflatedXmlLength = dataRawBytes.getInt(offsetWithIndex + 20);
+        int definitions = (offsetCompressedDataHeader - offsetIndex) / 4;
+        List<Integer> deflateStreams = new ArrayList<Integer>();
+        dataRawBytes.position(offsetCompressedDataHeader + 8);
+        int offset = dataRawBytes.getInt();
+        while (offset + dataRawBytes.position() < limit) {
+            offset = dataRawBytes.getInt();
+            deflateStreams.add(Integer.valueOf(offset));
+        }
+        int offsetCompressedData = dataRawBytes.position();
+        System.out.println("索引词组数目：" + definitions);
+        System.out.println("索引地址/大小：0x" + Integer.toHexString(offsetIndex) + " / "
+                + (offsetCompressedDataHeader - offsetIndex) + " B");
+        System.out.println("压缩数据地址/大小：0x" + Integer.toHexString(offsetCompressedData) + " / "
+                + (limit - offsetCompressedData) + " B");
+        System.out.println("词组索引地址/大小（解压缩后）：0x0 / " + inflatedWordsIndexLength + " B");
+        System.out.println("词组地址/大小（解压缩后）：0x" + Integer.toHexString(inflatedWordsIndexLength) + " / "
+                + inflatedWordsLength + " B");
+        System.out.println("XML地址/大小（解压缩后）：0x" + Integer.toHexString(inflatedWordsIndexLength + inflatedWordsLength)
+                + " / " + inflatedXmlLength + " B");
+        System.out.println("文件大小（解压缩后）：" + (inflatedWordsIndexLength + inflatedWordsLength + inflatedXmlLength) / 1024
+                + " KB");
+        String inflatedFile = ld2File + ".inflated";
+        inflate(dataRawBytes, deflateStreams, inflatedFile);
+
+        if (new File(inflatedFile).isFile()) {
+            String indexFile = ld2File + ".idx";
+            String extractedFile = ld2File + ".words";
+            String extractedXmlFile = ld2File + ".xml";
+            String extractedOutputFile = ld2File + ".output";
+
+            dataRawBytes.position(offsetIndex);
+            int[] idxArray = new int[definitions];
+            for (int i = 0; i < definitions; i++) {
+                idxArray[i] = dataRawBytes.getInt();
+            }
+            extract(inflatedFile, indexFile, extractedFile, extractedXmlFile, extractedOutputFile, idxArray,
+                    inflatedWordsIndexLength, inflatedWordsIndexLength + inflatedWordsLength);
+        }
+    }
+
+    private static final void writeInputStream(final InputStream in, final OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024 * 8];
+        int len;
+        while ((len = in.read(buffer)) > 0) {
+            out.write(buffer, 0, len);
+        }
+    }
+
+}

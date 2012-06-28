@@ -52,7 +52,7 @@ public class VocabularyInfoGrap {
             Node node = contentList.item(0);
             return node.getTextContent();
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }
@@ -64,14 +64,16 @@ public class VocabularyInfoGrap {
             if (vocabulary.indexOf(" ") < 0) {
                 System.out.println(vocabulary);
                 String phonetic = getPhonetic(vocabulary);
+                if (phonetic == null) {
+                    phonetic = " ";
+                }
+                System.out.println(phonetic);
                 String etymology = parseEtymology(vocabulary);
-                if (etymology != null) {
-                    etymology = etymology.replaceAll("\n", " ");
-                    bw.append(vocabulary).append("\t").append(phonetic).append("\t").append(etymology);
+                if (etymology == null) {
+                    etymology = " ";
                 }
-                else {
-                    bw.append(vocabulary).append("\t").append(phonetic);
-                }
+                etymology = etymology.replaceAll("\n", " ");
+                bw.append(vocabulary).append("\t").append(phonetic).append("\t").append(etymology);
             }
             bw.append("\n");
         }
