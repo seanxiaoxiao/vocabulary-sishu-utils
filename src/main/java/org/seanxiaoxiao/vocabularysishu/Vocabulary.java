@@ -10,6 +10,10 @@ public class Vocabulary {
 
     private int type;
 
+    private String summary;
+
+    private String audioLink;
+
     public int getType() {
         return type;
     }
@@ -44,5 +48,21 @@ public class Vocabulary {
 
     public void mergeType(int type) {
         this.type = this.type | type;
+    }
+
+    public String getAudioLink() {
+        return audioLink;
+    }
+
+    public void setAudioLink(String audioLink) {
+        this.audioLink = audioLink;
+    }
+    
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public String getSummary() {
+        return summary;
     }
 }

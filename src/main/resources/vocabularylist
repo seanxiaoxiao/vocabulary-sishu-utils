@@ -72,9 +72,8 @@ abstract,11
 abstracted,1
 abstraction,2
 abstruse,3
-absudity,4
 absurd,9
-absurdity,1
+absurdity,5
 abundance,9
 abundant,1
 abuse,11
@@ -106,7 +105,7 @@ accommodation,12
 accompany,11
 accomplice,3
 accomplish,9
-accomplished,2
+accomplished,3
 accomplishment,8
 accord,15
 accordance,8
@@ -126,7 +125,7 @@ accrete,1
 accretion,1
 accrue,5
 accumulate,11
-accuracy,8
+accuracy,9
 accurate,9
 accure,1
 accusation,2
@@ -289,7 +288,7 @@ affirmative,9
 affix,9
 afflict,15
 affliction,1
-affluence,4
+affluence,5
 affluent,11
 afford,8
 affordable,1
@@ -552,7 +551,7 @@ antagonism,15
 antagonist,1
 antagonistic,3
 antagonize,1
-Antarctic,8
+Antarctic,9
 Antarctica,2
 antebellum,4
 antecede,1
@@ -591,7 +590,7 @@ antipode,4
 antipsychotic,4
 antiquated,9
 antique,11
-antiquity,4
+antiquity,5
 antiseptic,1
 antithesis,5
 antithetic,1
@@ -630,7 +629,7 @@ apoplexy,1
 apostasy,1
 apostate,1
 apostrophe,1
-apothecary,4
+apothecary,5
 apothegm,1
 apotheosis,1
 appal,1
@@ -747,7 +746,7 @@ armory,1
 armour,8
 aroma,11
 aromatic,3
-arouse,8
+arouse,9
 arraign,1
 arrange,8
 arrangement,8
@@ -774,7 +773,7 @@ artifact,5
 artifice,1
 artificial,11
 artillery,11
-artisan,4
+artisan,5
 artist,2
 artistry,1
 artless,1
@@ -910,12 +909,12 @@ auction,15
 audacious,3
 audacity,1
 audible,11
-audience,8
+audience,9
 audio-visual,8
 audit,13
 audition,9
 auditor,2
-auditorium,8
+auditorium,9
 auditory,1
 auger,1
 augment,11
@@ -929,7 +928,7 @@ aureole,1
 auricular,1
 aurora,5
 auroral,1
-auspice,2
+auspice,3
 auspices,3
 auspicious,3
 austere,7
@@ -1445,7 +1444,6 @@ bourgeois,1
 bout,15
 boutique,8
 bovine,1
-bovine	,1
 bow,2
 bowdlerize,1
 bowel,8
@@ -1456,7 +1454,7 @@ bracelet,1
 bracing,3
 bracket,9
 brackish,1
-brag,2
+brag,3
 braggadocio,1
 braggart,1
 braid,3
@@ -1663,7 +1661,7 @@ callous,3
 callow,1
 callus,1
 calore,1
-calorie,12
+calorie,13
 calorific,1
 calumniate,1
 calumny,3
@@ -1681,9 +1679,9 @@ cancel,10
 cancer,8
 cancerous,4
 candela,1
-candid,2
+candid,3
 candidacy,1
-candidate,8
+candidate,9
 candidature,1
 candle,8
 candor,3
@@ -1795,7 +1793,7 @@ casting,8
 casual,9
 casualty,13
 cataclysm,1
-catalog,4
+catalog,5
 catalogue,12
 catalysis,1
 catalyst,13
@@ -1927,7 +1925,7 @@ charades,1
 charge,14
 charisma,1
 charismatic,1
-charitable,2
+charitable,3
 charity,15
 charlatan,1
 charm,9
@@ -2034,7 +2032,7 @@ circle,4
 circlet,1
 circuit,11
 circuitous,3
-circular,2
+circular,3
 circulate,11
 circulation,5
 circumference,13
@@ -2410,7 +2408,7 @@ condemn,11
 condemnation,1
 condense,15
 condescend,3
-condescending,6
+condescending,7
 condescension,1
 condign,1
 condiment,1
@@ -2450,7 +2448,7 @@ conflagration,1
 conflate,1
 conflict,9
 confluence,9
-conform,14
+conform,15
 conformism,1
 conformist,1
 conformity,1
@@ -2539,7 +2537,7 @@ constant,11
 constellation,5
 consternation,1
 constituent,11
-constitute,10
+constitute,11
 constitution,9
 constitutional,1
 constrain,11
@@ -2705,7 +2703,7 @@ corrigendum,1
 corroborate,7
 corroboration,1
 corroborative,2
-corrode,10
+corrode,11
 corrosive,3
 corrugate,1
 corrugated,1
@@ -2772,7 +2770,7 @@ cozen,1
 cozy,3
 crab,1
 crabbed,1
-crack,12
+crack,13
 cracker,2
 crackpot,1
 cradle,10
@@ -3046,7 +3044,7 @@ deceitful,2
 deceive,8
 decelerate,1
 decency,3
-decent,14
+decent,15
 decentralize,9
 deception,3
 deceptive,2
@@ -3228,7 +3226,7 @@ dentition,4
 denture,1
 denude,1
 denunciate,1
-denunciation,2
+denunciation,3
 denunciatory,4
 deny,8
 depart,12
@@ -3263,7 +3261,7 @@ deputize,1
 deputy,9
 deracinate,1
 derange,2
-deranged,2
+deranged,3
 derangement,1
 derelict,11
 dereliction,1
@@ -3287,7 +3285,7 @@ descry,1
 deseam,1
 desecrate,1
 desegregation,4
-desert,8
+desert,9
 deserted,3
 deserter,1
 desertion,1
@@ -3342,7 +3340,7 @@ detente,1
 deter,11
 detergent,15
 deteriorate,11
-deterioration,4
+deterioration,5
 determinant,1
 determinate,1
 determination,9
@@ -3426,7 +3424,7 @@ dietetics,1
 dietician,1
 differ,8
 difference,4
-differentiate,8
+differentiate,9
 diffident,3
 diffuse,11
 diffusion,1
@@ -3504,7 +3502,7 @@ disc,8
 discard,9
 discern,15
 discernable,1
-discernible,2
+discernible,3
 discerning,1
 discernment,1
 discharge,15
@@ -3683,7 +3681,7 @@ dive,2
 diver,1
 diverge,11
 divergence,5
-divergent,6
+divergent,7
 divers,1
 diverse,13
 diversify,6
@@ -3703,7 +3701,6 @@ division,12
 divisor,4
 divulge,7
 dizzy,10
-do,8
 docile,7
 dock,9
 docket,1
@@ -3953,7 +3950,7 @@ effeminate,1
 effervesce,1
 effervescence,1
 effete,1
-efficacious,2
+efficacious,3
 efficacy,1
 efficient,10
 effigy,5
@@ -3997,7 +3994,6 @@ electorate,5
 electrical,8
 electrician,8
 electricity,2
-electromagmetic,4
 electromagnet,2
 electromagnetism,2
 electron,4
@@ -4232,7 +4228,7 @@ entrant,12
 entrap,2
 entreat,11
 entreaty,1
-entree,4
+entree,5
 entrench,1
 entrenched,9
 entrepreneur,13
@@ -4307,7 +4303,7 @@ erect,11
 erode,11
 erosion,9
 erotic,1
-err,8
+err,9
 errand,11
 errant,1
 erratic,15
@@ -5278,7 +5274,7 @@ gender,12
 gene,9
 genealogy,1
 generality,9
-generalize,8
+generalize,9
 generate,11
 generation,1
 generator,1
@@ -5339,7 +5335,7 @@ gibberish,1
 gibe,3
 giddy,3
 gigantic,10
-giggle,8
+giggle,9
 gild,3
 gilded,1
 gilt,2
@@ -5485,7 +5481,7 @@ gratis,1
 gratitude,9
 gratuitous,3
 gratuity,9
-grave,8
+grave,9
 gravel,11
 graveside,4
 graveyard,8
@@ -6081,7 +6077,7 @@ illusion,9
 illusionary,4
 illusive,1
 illusory,7
-illustrate,10
+illustrate,11
 illustration,9
 illustrious,3
 imaginary,1
@@ -6091,7 +6087,7 @@ imbecile,1
 imbecility,1
 imbibe,3
 imbroglio,1
-imbue,2
+imbue,3
 imbue with,1
 imitate,8
 imitation,9
@@ -6210,7 +6206,7 @@ improvisation,1
 improvisational,1
 improvise,11
 improvised,1
-imprudent,2
+imprudent,3
 impudent,3
 impugn,3
 impuissance,1
@@ -6342,9 +6338,9 @@ indescribable,1
 indeterminate,1
 index,2
 indicate,9
-indicative,8
+indicative,9
 indicator,8
-indices,4
+indices,5
 indict,3
 indictment,3
 indifferent,11
@@ -6475,7 +6471,7 @@ ingratitude,1
 ingredient,11
 ingress,1
 ingénue,1
-inhabit,8
+inhabit,9
 inhabitant,11
 inhalation,4
 inhale,1
@@ -6483,7 +6479,7 @@ inherent,15
 inherently,2
 inherit,9
 inherited,4
-inhibit,8
+inhibit,9
 inhibited,1
 inhibitor,1
 inhuman,3
@@ -6508,7 +6504,7 @@ innermost,2
 innocence,1
 innocent,10
 innocuous,9
-innovation,8
+innovation,9
 innovative,1
 innovator,2
 innuendo,1
@@ -6588,7 +6584,7 @@ instrument,8
 instrumental,11
 instrumentalist,1
 insubordinate,3
-insubstantial,8
+insubstantial,9
 insufferable,1
 insufficiency,1
 insufficient,1
@@ -6624,7 +6620,7 @@ intelligible,9
 intemperate,1
 intend,8
 intense,14
-intensify,10
+intensify,11
 intensive,8
 intent,9
 intention,12
@@ -6815,7 +6811,7 @@ islet,2
 isolate,9
 isolation,4
 isosceles  triangle,4
-isotope,4
+isotope,5
 issue,9
 isthmus,1
 item,8
@@ -6909,7 +6905,7 @@ junior,8
 junk,11
 junket,1
 Jupiter,2
-jurisdiction,4
+jurisdiction,5
 jurisprudence,1
 jury,8
 justifiable,1
@@ -7028,7 +7024,6 @@ lariat,1
 lark,1
 larva,1
 larvae,4
-larvaWord List 20,1
 laryngitis,1
 larynx,9
 lascivious,1
@@ -7111,7 +7106,7 @@ legerdemain,1
 legible,9
 legion,11
 legislate,9
-legislation,8
+legislation,9
 legislative,2
 legislature,5
 legitimacy,4
@@ -7154,7 +7149,6 @@ lexicon,1
 liability,15
 liable,11
 liaison,11
-liasion,1
 libation,1
 libel,1
 libellous,1
@@ -7261,7 +7255,7 @@ load,2
 loaf,13
 loam,1
 loan,10
-loath,10
+loath,11
 loathe,3
 loathsome,1
 lobby,9
@@ -7337,7 +7331,7 @@ ludicrous,11
 lug,3
 lugubrious,1
 lukewarm,11
-lull,10
+lull,11
 lullaby,1
 lumber,3
 lumberjack,1
@@ -7464,7 +7458,7 @@ managerial,8
 mandate,9
 mandatory,15
 maneuver,15
-maneuvrable,1
+manoeuvrable,1
 maneuvre,1
 mangle,3
 mangrove,8
@@ -7474,7 +7468,7 @@ mania,9
 maniac,10
 maniacal,1
 manifest,11
-manifestation,8
+manifestation,9
 manifesto,1
 manifold,11
 manikin,1
@@ -7675,7 +7669,7 @@ meteor,2
 meteoric,9
 meteorite,4
 meteorologist,12
-meteorology,8
+meteorology,9
 methane,4
 methodical,11
 methodology,12
@@ -7971,7 +7965,7 @@ mural,5
 murky,1
 murmur,11
 muscle,1
-muscular,8
+muscular,9
 muse,3
 mushroom,9
 mushy,1
@@ -8141,7 +8135,7 @@ nomad,13
 nomadic,1
 nomenclature,1
 nominal,11
-nominate,10
+nominate,11
 nomination,1
 nominee,8
 nonchalance,1
@@ -8207,7 +8201,6 @@ nucleate,1
 nucleotide,4
 nucleus,15
 nude,1
-nudeon,4
 nudge,3
 nudity,1
 nugatory,1
@@ -8346,7 +8339,7 @@ off-hand,8
 off-key,1
 off-the-shelf,4
 offbeat,1
-offence,10
+offence,11
 offend,11
 offense,1
 offensive,3
@@ -8482,7 +8475,6 @@ orotund,1
 orthodontics,1
 orthodox,13
 orthodoxy,1
-orthogenetic,4
 orthography,1
 orthopedic,8
 orthopedics,1
@@ -8791,7 +8783,7 @@ paternity,8
 pathetic,11
 pathogen,1
 pathogenic,4
-pathological,8
+pathological,9
 pathology,5
 pathos,9
 patina,1
@@ -9557,7 +9549,7 @@ process,8
 processed food,4
 procession,1
 proclaim,11
-proclamation,2
+proclamation,3
 proclivity,1
 procrastinate,1
 procreate,1
@@ -9565,7 +9557,7 @@ procrustean,1
 proctor,5
 procure,11
 procurement,1
-prod,2
+prod,3
 prodigal,3
 prodigious,15
 prodigy,5
@@ -9633,7 +9625,7 @@ proofread,1
 prop,3
 propaganda,10
 propagate,11
-propagation,4
+propagation,5
 propel,11
 propeller,1
 propensity,7
@@ -9665,7 +9657,7 @@ proscenium,1
 proscribe,1
 prose,5
 prosecute,11
-prosecution,8
+prosecution,9
 prosecutor,1
 proselyte,1
 proselytize,1
@@ -9943,7 +9935,7 @@ rag,1
 ragamuffin,1
 rage,15
 ragged,11
-ragtime,4
+ragtime,5
 raid,15
 rail,9
 raillery,1
@@ -10388,7 +10380,7 @@ reserve,9
 reserved,1
 reservoir,10
 reshuffle,9
-reside,2
+reside,3
 residence,9
 resident,1
 residual,3
@@ -10451,7 +10443,7 @@ resuscitate,1
 resuscitation,4
 retail,15
 retailer,1
-retain,10
+retain,11
 retainer,1
 retaliate,3
 retaliation,5
@@ -10769,7 +10761,7 @@ satirical,1
 satirist,2
 satirize,3
 satisfactory,2
-saturate,14
+saturate,15
 saturated,1
 Saturn,2
 saturnalia,1
@@ -10898,7 +10890,7 @@ scud,3
 scuff,1
 scuffle,1
 sculpt,1
-sculptor,2
+sculptor,3
 sculpture,10
 scum,9
 scurrility,1
@@ -11571,7 +11563,7 @@ splint,9
 splinter,7
 split,11
 splurge,1
-spoil,14
+spoil,15
 spoilsport,1
 spoke,1
 spokesman,8
@@ -11793,7 +11785,7 @@ stratify,1
 stratigraphical,4
 stratosphere,4
 stratum,1
-stray,2
+stray,3
 streak,3
 stream,1
 streamlined,1
@@ -12311,7 +12303,7 @@ thermodynamics,2
 thermometer,8
 thermostat,8
 thesaurus,9
-thesis,8
+thesis,9
 thespian,1
 thicket,3
 thigh,8
@@ -12486,7 +12478,7 @@ tragedy,9
 trail,10
 trainee,8
 traipse,1
-trait,14
+trait,15
 traitor,11
 traitorous,4
 trajectory,5
@@ -12815,7 +12807,7 @@ unicorn,9
 unidimensional,1
 unification,5
 uniform,11
-unify,8
+unify,9
 unilateral,9
 unimpassioned,1
 unimpeachable,1
@@ -12912,7 +12904,7 @@ upkeep,8
 upright,11
 uprising,8
 uproar,3
-uproarious,2
+uproarious,3
 uproot,2
 upscale clientele,4
 upset,10
@@ -13267,7 +13259,6 @@ wander,8
 wanderlust,1
 wane,11
 wangle,1
-wanish,2
 want,1
 wanton,3
 warble,1
