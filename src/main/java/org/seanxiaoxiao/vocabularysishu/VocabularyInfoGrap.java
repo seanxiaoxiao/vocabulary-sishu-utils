@@ -58,7 +58,7 @@ public class VocabularyInfoGrap {
     }
 
     public static void main(String[] args) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/vocabulary-info")));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet4/target/vocabulary-info")));
         List<String> vocabularyList = Utils.getVocabularyList();
         for (String vocabulary : vocabularyList) {
             if (vocabulary.indexOf(" ") < 0) {
@@ -68,14 +68,15 @@ public class VocabularyInfoGrap {
                     phonetic = " ";
                 }
                 System.out.println(phonetic);
-                String etymology = parseEtymology(vocabulary);
-                if (etymology == null) {
-                    etymology = " ";
-                }
-                etymology = etymology.replaceAll("\n", " ");
-                bw.append(vocabulary).append("\t").append(phonetic).append("\t").append(etymology);
+//                String etymology = parseEtymology(vocabulary);
+//                if (etymology == null) {
+//                    etymology = " ";
+//                }
+//                etymology = etymology.replaceAll("\n", " ");
+                bw.append(vocabulary).append("\t").append(phonetic).append("\t");
             }
             bw.append("\n");
         }
+        bw.close();
     }
 }

@@ -36,6 +36,9 @@ public class Exporters {
         repoList.add("IELTS顺序");
         repoList.add("IELTS逆序");
         repoList.add("IELTS乱序");
+        repoList.add("四级大纲词汇");
+        repoList.add("四级精选词汇");
+        repoList.add("四级核心词汇");
         Gson gson = new Gson();
         System.out.println(gson.toJson(repoList));
     }
@@ -81,6 +84,7 @@ public class Exporters {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/GRE Random")));
         String line = null;
         List<VSList> result = new ArrayList<VSList>();
+        List<String> wordList = Utils.getVocabularyList();
         VSList vsList = null;
         while ((line = br.readLine()) != null) {
             if (line.startsWith("Word List")) {
@@ -93,6 +97,9 @@ public class Exporters {
             }
             else {
                 if (line != null) {
+                    if (!wordList.contains(line.trim())) {
+                        System.out.println(line);
+                    }
                     vsList.addVocabulary(line.trim());
                 }
             }
@@ -104,7 +111,7 @@ public class Exporters {
     public static void exportGRE分类() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/gre-category")));
         String line = null;
-        List<String> words = Utils.getGREVocabularyList();
+        List<String> wordList = Utils.getVocabularyList();
         List<VSList> result = new ArrayList<VSList>();
         VSList vsList = null;
         int count = 1;
@@ -120,9 +127,8 @@ public class Exporters {
             }
             else {
                 if (line != null) {
-                    if (!words.contains(infos[0].trim())) {
-                        //System.out.println(line);
-                        //System.err.println(infos[0].trim());
+                    if (!wordList.contains(infos[0].trim())) {
+                        System.out.println(infos[0]);
                     }
                     else {
                         vsList.addVocabulary(infos[0].trim());
@@ -138,7 +144,7 @@ public class Exporters {
         List<String> TOEFLVocabularies = Utils.getTOEFLVocabularyList();
         List<VSList> result = new ArrayList<VSList>();
         int j = 0;
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 40; i++) {
             VSList list = new VSList();
             list.setRepoName("TOEFL顺序");
             list.setOrder(i);
@@ -157,7 +163,7 @@ public class Exporters {
         Collections.reverse(TOEFLVocabularies);
         List<VSList> result = new ArrayList<VSList>();
         int j = 0;
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 40; i++) {
             VSList list = new VSList();
             list.setRepoName("TOEFL逆序");
             list.setOrder(i);
@@ -176,7 +182,7 @@ public class Exporters {
         Collections.shuffle(TOEFLVocabularies);
         List<VSList> result = new ArrayList<VSList>();
         int j = 0;
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 40; i++) {
             VSList list = new VSList();
             list.setRepoName("TOEFL乱序");
             list.setOrder(i);
@@ -191,11 +197,12 @@ public class Exporters {
     }
     
     public static void exportTOEFL分类() throws IOException {
-        BufferedReader bReader = new BufferedReader(new FileReader("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/TOEFL-category"));
+        BufferedReader bReader = new BufferedReader(new FileReader("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/tofel-category"));
         List<VSList> result = new ArrayList<VSList>();
         String line = null;
         VSList list = null;
         int order = 0;
+        List<String> wordList = Utils.getVocabularyList();
         while ((line = bReader.readLine()) != null) {
             Pattern pattern = Pattern.compile("[\u4E00-\u9FA5]*");
             Matcher matcher = pattern.matcher(line);
@@ -208,7 +215,12 @@ public class Exporters {
                 result.add(list);
             }
             else {
-                list.addVocabulary(line);
+                if (!wordList.contains(line)) {
+                    System.out.println(line);
+                }
+                else {
+                    list.addVocabulary(line);
+                }
             }
         }
         Gson gson = new Gson();
@@ -219,7 +231,7 @@ public class Exporters {
         List<String> gmatVocabularyList = Utils.getGMATVocabularyList();
         List<VSList> result = new ArrayList<VSList>();
         int j = 0;
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 40; i++) {
             VSList list = new VSList();
             list.setRepoName("GMAT顺序");
             list.setOrder(i);
@@ -238,7 +250,7 @@ public class Exporters {
         Collections.reverse(gmatVocabularyList);
         List<VSList> result = new ArrayList<VSList>();
         int j = 0;
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 40; i++) {
             VSList list = new VSList();
             list.setRepoName("GMAT逆序");
             list.setOrder(i);
@@ -257,7 +269,7 @@ public class Exporters {
         Collections.shuffle(gmatVocabularyList);
         List<VSList> result = new ArrayList<VSList>();
         int j = 0;
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 40; i++) {
             VSList list = new VSList();
             list.setRepoName("GMAT乱序");
             list.setOrder(i);
@@ -275,7 +287,7 @@ public class Exporters {
         List<String> ieltsVocabularyList = Utils.getIELTSVocabularyList();
         List<VSList> result = new ArrayList<VSList>();
         int j = 0;
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 40; i++) {
             VSList list = new VSList();
             list.setRepoName("IELTS顺序");
             list.setOrder(i);
@@ -294,7 +306,7 @@ public class Exporters {
         Collections.reverse(ieltsVocabularyList);
         List<VSList> result = new ArrayList<VSList>();
         int j = 0;
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 40; i++) {
             VSList list = new VSList();
             list.setRepoName("IELTS逆序");
             list.setOrder(i);
@@ -313,7 +325,7 @@ public class Exporters {
         Collections.shuffle(ieltsVocabularyList);
         List<VSList> result = new ArrayList<VSList>();
         int j = 0;
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 40; i++) {
             VSList list = new VSList();
             list.setRepoName("IELTS乱序");
             list.setOrder(i);
@@ -357,36 +369,36 @@ public class Exporters {
             String[] infos = line.split(",");
             String spell = infos[0];
             int type = Integer.parseInt(infos[1]);
-            Vocabulary vocabulary = vocabularyMap.get(spell);
-            if (vocabulary != null) {
-                vocabulary.setType(type);
-                vocabularies.add(vocabulary);
-            }
-            else {
-                vocabulary = new Vocabulary();
-                vocabulary.setSpell(spell);
-                vocabulary.setType(type);
-                vocabularyMap.put(spell, vocabulary);
-                vocabularies.add(vocabulary);
-            }
-        }
-        BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/vocabulary-audio")));
-        String audioString = null;
-        while ((audioString = br2.readLine()) != null) {
-            String[] infos = audioString.split(",");
-            String spell = infos[0];
-            String link = infos[1];
-            if (!link.equals("null")) {
                 Vocabulary vocabulary = vocabularyMap.get(spell);
-                if (vocabulary == null) {
-                    System.out.println(spell);
+                if (vocabulary != null) {
+                    vocabulary.setType(type);
+                    vocabularies.add(vocabulary);
                 }
-                vocabulary.setAudioLink(link);
-            }
+                else {
+                    vocabulary = new Vocabulary();
+                    vocabulary.setSpell(spell);
+                    vocabulary.setType(type);
+                    vocabularyMap.put(spell, vocabulary);
+                    vocabularies.add(vocabulary);
+                }
         }
+        
         br1.close();
         br.close();
-        br2.close();
+        BufferedReader br3 = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/summary")));
+        String summary = null;
+        while ((summary = br3.readLine()) != null) {
+            String[] infos = summary.split("\t");
+            String spell = infos[0];
+            String content = infos[1];
+            if (!content.equals("null")) {
+                Vocabulary vocabulary = vocabularyMap.get(spell);
+                if (vocabulary == null) {
+                    continue;
+                }
+                vocabulary.setSummary(content);
+            }
+        }
         Gson gson = new Gson();
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/Vocabularies.txt")));
         for (Vocabulary vocabulary : vocabularies) {
@@ -416,13 +428,108 @@ public class Exporters {
         System.out.println(gson.toJson(vocabulariesMeaningMap));
     }
     
+    private static void exportMWMeaning() throws IOException {
+        List<String> list = Utils.getTOEFLVocabularyList();
+        BufferedReader br3 = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/vocabulary-mw-meaning")));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/Vocabularies-toefl-mw-meaning")));
+        String line = "";
+        while ((line = br3.readLine()) != null) {
+            if (list.contains(line.split("\t")[0])) {
+                bw.append(line).append("\n");
+            }
+        }
+        bw.close();
+    }
+    
+    private static void export四级精精选() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet4/四级-精精选")));
+        String line = "";
+        List<VSList> lists = new ArrayList<VSList>();
+        int listIndex = 1;
+        int wordCount = 0;
+        VSList list = new VSList();
+        list.setRepoName("四级核心");
+        list.setName("四级核心 List" + listIndex);
+        list.setOrder(listIndex);
+        lists.add(list);
+        while((line = br.readLine()) != null) {
+            if (line.trim().length() == 0) {
+                continue;
+            }
+            wordCount++;
+            list.addVocabulary(line.trim());
+            br.readLine();
+            if (wordCount == 50) {
+                wordCount = 0;
+                listIndex++;
+                list = new VSList();
+                list.setRepoName("四级核心");
+                list.setName("四级核心 List" + listIndex);
+                list.setOrder(listIndex);
+                lists.add(list);
+            }
+        }
+        br.close();
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(lists));
+    }
+    
+    public static void export四级大纲词汇() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet4/四级大纲")));
+        String line = "";
+        List<VSList> lists = new ArrayList<VSList>();
+        int listIndex = 1;
+        int wordCount = 0;
+        VSList list = new VSList();
+        list.setRepoName("四级大纲");
+        list.setName("四级大纲 List" + listIndex);
+        list.setOrder(listIndex);
+        lists.add(list);
+        while((line = br.readLine()) != null) {
+            if (line.trim().length() == 0) {
+                continue;
+            }
+            wordCount++;
+            list.addVocabulary(line.trim().split(" ")[0]);
+            if (wordCount == 100) {
+                wordCount = 0;
+                listIndex++;
+                list = new VSList();
+                list.setRepoName("四级大纲");
+                list.setName("四级大纲 List" + listIndex);
+                list.setOrder(listIndex);
+                lists.add(list);
+            }
+        }
+        br.close();
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(lists));
+    }
+    
     public static void main(String[] args) throws IOException {
         //exportRepo();
-        //exportGRE顺序();
-        //exportIELTS乱序();
-        //exportGRE乱序();
-        exportGRE分类();
-        //exportVocabularyInfo();
-        //exportVocabularyMeaning();
+//        exportGRE顺序();
+//        exportGRE逆序();
+//        exportGRE乱序();
+//        exportGRE分类();
+//        exportTOEFL顺序();
+//        exportTOEFL逆序();
+//        exportTOEFL乱序();
+//        exportTOEFL分类();
+//        exportGMAT顺序();
+//        exportGMAT逆序();
+//        exportGMAT乱序();
+//        exportIELTS顺序();
+//        exportIELTS逆序();
+//        exportIELTS乱序();
+        
+        //exportGMAT逆序();
+        //exportTOEFL分类();
+        //exportGMAT乱序();
+//        
+        export四级大纲词汇();
+        //exportMWMeaning();
+//        exportVocabularyInfo();
+//        exportVocabularyMeaning();
     }
 }

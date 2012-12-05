@@ -42,7 +42,9 @@ public class VSList {
     }
     
     public void addVocabulary(String vocabulary) {
-        vocabularyList.add(vocabulary);
+        if (!vocabularyList.contains(vocabulary)) {
+            vocabularyList.add(vocabulary);
+        }
     }
     
 }

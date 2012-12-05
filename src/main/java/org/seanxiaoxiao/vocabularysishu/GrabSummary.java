@@ -1,7 +1,9 @@
 package org.seanxiaoxiao.vocabularysishu;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -12,7 +14,11 @@ public class GrabSummary {
 
     private static List<String> wordList = Utils.getVocabularyList();
     
-    public static void main(String[] args) throws IOException {
+    public static void exportCET4() {
+        
+    }
+    
+    public static void exportOthers() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/summary-gre")));
         String line = null;
         Map<String, String> summaryMap = new HashMap<String, String>();
@@ -55,24 +61,21 @@ public class GrabSummary {
             }
         }
         br.close();
-        int count = 0;
-        for (String word : wordList) {
-            String summary = summaryMap.get(word);
-            if (summary != null && summary.length() > 12) {
-            //    System.out.println(word + " " + summary);
+        br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/summary-remain")));
+        while ((line = br.readLine()) != null) {
+            String[] infos = line.split(", ");
+            if (!summaryMap.containsKey(infos[0])) {
+                summaryMap.put(infos[0].trim(), infos[1].trim());
             }
         }
-        Map<String, List<VocabularyMeaning>> allMeanings = Utils.getMeanings();
+        BufferedWriter bw = new BufferedWriter(new FileWriter("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/summary"));
         for (String word : wordList) {
-            if (!summaryMap.containsKey(word)) {
-                count++;
-                String meaning = "";
-                for (VocabularyMeaning vocabularyMeaning : allMeanings.get(word)) {
-                    meaning = meaning + " " + vocabularyMeaning.getAttribute() + vocabularyMeaning.getMeaning();
-                }
-                System.out.println(word + "," + meaning);
-            }
+            bw.append(word).append("\t").append(summaryMap.get(word)).append("\n");
         }
-        System.out.println(count);
+        bw.close();
+    
+    }
+    
+    public static void main(String[] args) throws IOException {
     }
 }
