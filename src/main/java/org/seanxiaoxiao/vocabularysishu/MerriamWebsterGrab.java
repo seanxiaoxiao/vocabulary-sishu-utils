@@ -103,13 +103,10 @@ public class MerriamWebsterGrab {
     }
 
     public static void main(String[] args) throws IOException {
-        List<String> vocabularyList = Utils.getVocabularyList();
-        boolean go = false;
-        BufferedWriter bw = new BufferedWriter(new FileWriter("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/vocabulary-mw-meaning", true));
+        List<String> vocabularyList = Utils.getGRERemainingVocabularyList();
+        boolean go = true;
+        BufferedWriter bw = new BufferedWriter(new FileWriter("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/gre/target/vocabulary-mw-meaning", true));
         for (String vocabulary : vocabularyList) {
-            if (vocabulary.equals("plasma")) {
-                go = true;
-            }
             if (go) {
                 System.out.println(vocabulary);
                 List<VocabularyMeaning> meanings = parseTraslate(vocabulary);

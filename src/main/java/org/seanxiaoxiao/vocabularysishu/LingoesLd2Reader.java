@@ -64,7 +64,7 @@ public class LingoesLd2Reader {
     public static void main(String[] args) throws IOException {
         // download from
         // https://skydrive.live.com/?cid=a10100d37adc7ad3&sc=documents&id=A10100D37ADC7AD3%211172#cid=A10100D37ADC7AD3&sc=documents
-        String ld2File = "/Users/xiaoxiao/Downloads/Merriam-Webster Collegiate Dictionary.ld2";
+        String ld2File = "/Users/xiaoxiao/Downloads/E-C American Heritage Dictionary.ld2";
 
         // read lingoes ld2 into byte array
         ByteArrayOutputStream dataOut = new ByteArrayOutputStream();
@@ -191,7 +191,7 @@ public class LingoesLd2Reader {
                 outputWriter.write(defData[1]);
                 outputWriter.write("\n");
 
-                String outputFileDir = "/Users/xiaoxiao/workspace/resource/" + defData[0].charAt(0);
+                String outputFileDir = "/Users/xiaoxiao/workspace/resource-dic/" + defData[0].charAt(0);
                 File dir = new File(outputFileDir);
                 dir.mkdirs();
                 File file = new File(outputFileDir + "/" + defData[0] + ".xml");

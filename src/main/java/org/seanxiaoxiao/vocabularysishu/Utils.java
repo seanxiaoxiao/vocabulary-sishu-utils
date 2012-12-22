@@ -1,14 +1,20 @@
 package org.seanxiaoxiao.vocabularysishu;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +26,37 @@ import com.google.gson.stream.MalformedJsonException;
 
 public class Utils {
 
+    public static Map<String, String> getRawAHInfo() {
+        try {
+            Map<String, String> infoMap = new HashMap<String, String>();
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/vocabulary-meaning")));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                if (!line.equals("")) {
+                    infoMap.put(line.split("::")[0].trim(), line);
+                }
+            }
+            br.close();
+            return infoMap;
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public static Map<String, String> getRawInfo() throws IOException {
+        Map<String, String> infoMap = new HashMap<String, String>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/vocabulary-info")));
+        String line = null;
+        while ((line = br.readLine()) != null) {
+            if (!line.equals("")) {
+                infoMap.put(line.split("\t")[0], line);
+            }
+        }
+        br.close();
+        return infoMap;
+    }
+    
     public static List<String> getVocabularyList() {
         try {
             List<String> vocabularyList = new ArrayList<String>();
@@ -34,20 +71,28 @@ public class Utils {
         }
     }
     
-    public static List<String> getCET4VocabularyList() {
+    public static List<String> getCET6VocabularyList() {
         try {
-            List<String> vocabularyList = new ArrayList<String>();
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet4/source/四级大纲")));
+            Set<String> vocabularySet = new HashSet<String>();
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet6/source/六级大纲")));
             for (String line = null; (line = br.readLine()) != null; ) {
-                vocabularyList.add(line.split(" ")[0].trim());
+                vocabularySet.add(line.split(" ")[0].trim());
             }
             br.close();
-            br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet4/source/四级-精精选")));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet6/source/六级精选")));
             for (String line = null; (line = br.readLine()) != null; ) {
-                vocabularyList.add(line.trim());
+                vocabularySet.add(line.split(" ")[0].trim());
+            }
+            br.close();
+            br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet6/source/六级乱序")));
+            for (String line = null; (line = br.readLine()) != null; ) {
+                vocabularySet.add(line.trim());
                 br.readLine();
             }
             br.close();
+            List<String> vocabularyList = new ArrayList<String>();
+            vocabularyList.addAll(vocabularySet);
+            Collections.sort(vocabularyList, String.CASE_INSENSITIVE_ORDER);
             return vocabularyList;
         }
         catch (Exception e) {
@@ -56,24 +101,57 @@ public class Utils {
         }
     }
     
-
-    public static List<String> getCET4OtherVocabulary() {
+    public static List<String> getGRERemainingVocabularyList() {
         try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/gre/source/remaining-word")));
             List<String> vocabularyList = new ArrayList<String>();
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet4/source/四级乱序")));
             for (String line = null; (line = br.readLine()) != null; ) {
-                if (line.startsWith("Word List")) {
-                    line = br.readLine();
-                }
                 vocabularyList.add(line.trim());
-                br.readLine();
             }
+            br.close();
             return vocabularyList;
         }
         catch (Exception e) {
             return null;
         }
     }
+    
+    public static List<String> getCET4VocabularyList() {
+        try {
+            Set<String> vocabularySet = new HashSet<String>();
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet4/source/四级大纲")));
+            for (String line = null; (line = br.readLine()) != null; ) {
+                vocabularySet.add(line.split(" ")[0].trim());
+            }
+            br.close();
+            br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet4/source/四级-精精选")));
+            for (String line = null; (line = br.readLine()) != null; ) {
+                vocabularySet.add(line.trim());
+                br.readLine();
+                
+            }
+            br.close();
+            br = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet4/source/四级乱序")));
+            for (String line = null; (line = br.readLine()) != null; ) {
+                if (line.startsWith("Word List")) {
+                    line = br.readLine();
+                }
+                
+                vocabularySet.add(line.trim());
+                br.readLine();
+            }
+            br.close();
+            List<String> vocabularyList = new ArrayList<String>();
+            vocabularyList.addAll(vocabularySet);
+            Collections.sort(vocabularyList, String.CASE_INSENSITIVE_ORDER);
+            return vocabularyList;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
 
     public static List<String> getTOEFLVocabularyList() {
         try {
@@ -385,7 +463,7 @@ public class Utils {
                         System.out.println(line.split("::")[0] + " " + meaning.get("attribute").toString());
                     }
                 
-            }
+                }
             }
             catch (JsonSyntaxException e) {
                 System.err.println(line.split("::")[0]);
@@ -394,18 +472,29 @@ public class Utils {
         }
     }
     
-    public static void main(String[] args) throws IOException {
-        //longestSummary();
-        //flawedMeanings();
-        //meaningCheck();
-//        rename();
-//        deleteExistedImgDir();
-        List<String> cet4 = getCET4VocabularyList();
-        List<String> cet4Other = getCET4OtherVocabulary();
-        for (String word : cet4Other) {
-            if (!cet4.contains(word)) {
-                System.out.println(word);
+    public static List<String> getRemainingGREList() {
+        try {
+            BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/gre/source/gre精选")));
+            String line = "";
+            List<String> wordList = new ArrayList<String>();
+            while ((line = br1.readLine()) != null) {
+                wordList.add(line.trim());
             }
+            br1.close();
+            BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/gre/source/grebarron")));
+            while ((line = br2.readLine()) != null) {
+                wordList.add(line.split("\t ")[0].trim());
+            }
+            br2.close();
+            return wordList;
         }
+        catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public static void main(String[] args) throws IOException {
+        List<String> cet6 = Utils.getCET6VocabularyList();
+        System.out.println(cet6.size());
     }
 }

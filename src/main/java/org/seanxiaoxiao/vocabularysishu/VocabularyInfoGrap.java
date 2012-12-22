@@ -5,6 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
+import java.util.Map;
+
+import java_cup.runtime.lr_parser;
 
 import org.cyberneko.html.parsers.DOMParser;
 import org.w3c.dom.Document;
@@ -58,22 +61,31 @@ public class VocabularyInfoGrap {
     }
 
     public static void main(String[] args) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet4/target/vocabulary-info")));
-        List<String> vocabularyList = Utils.getVocabularyList();
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet6/target/vocabulary-info")));
+        List<String> vocabularyList = Utils.getCET6VocabularyList();
+        Map<String, String> rawVocabularyInfo = Utils.getRawInfo();
         for (String vocabulary : vocabularyList) {
             if (vocabulary.indexOf(" ") < 0) {
-                System.out.println(vocabulary);
-                String phonetic = getPhonetic(vocabulary);
-                if (phonetic == null) {
-                    phonetic = " ";
+                if (rawVocabularyInfo.containsKey(vocabulary)) {
+                    System.out.println("Has key: " + vocabulary);
+                    bw.append(rawVocabularyInfo.get(vocabulary));
                 }
-                System.out.println(phonetic);
-//                String etymology = parseEtymology(vocabulary);
-//                if (etymology == null) {
-//                    etymology = " ";
-//                }
-//                etymology = etymology.replaceAll("\n", " ");
-                bw.append(vocabulary).append("\t").append(phonetic).append("\t");
+                else {
+                    System.out.println(vocabulary);
+                    String phonetic = getPhonetic(vocabulary);
+                    if (phonetic == null) {
+                        phonetic = " ";
+                    }
+//                    String etymology = parseEtymology(vocabulary);
+//                    if (etymology == null) {
+//                        etymology = " ";
+//                    }
+//                    etymology = etymology.replaceAll("\n", " ");
+                    bw.append(vocabulary).append("\t").append(phonetic).append("\t");
+                }
+            }
+            else {
+                bw.append(vocabulary);
             }
             bw.append("\n");
         }

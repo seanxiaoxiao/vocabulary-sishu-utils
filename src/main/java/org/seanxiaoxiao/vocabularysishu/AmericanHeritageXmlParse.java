@@ -34,24 +34,31 @@ import com.google.gson.Gson;
 
 public class AmericanHeritageXmlParse {
 
-    private static List<String> vocabularyList = Utils.getVocabularyList();
+    private static List<String> vocabularyList = Utils.getCET6VocabularyList();
 
     private static Map<String, List<VocabularyMeaning>> meaningMap = new HashMap<String, List<VocabularyMeaning>>();
+    
+    private static Map<String, String> infoMap = Utils.getRawAHInfo();
 
     private static int count = 0;
 
     private static void writeToFile() throws IOException {
-        List<String> vocabularyList = new ArrayList<String>();
-        for (String vocabulary : meaningMap.keySet()) {
-            vocabularyList.add(vocabulary);
-        }
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/vocabulary-meaning")));
+//        List<String> vocabularyList = new ArrayList<String>();
+//        for (String vocabulary : meaningMap.keySet()) {
+//            vocabularyList.add(vocabulary);
+//        }
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet6/target/vocabulary-meaning")));
         Collections.sort(vocabularyList, String.CASE_INSENSITIVE_ORDER);
         Gson gson = new Gson();
         for (String vocabulary : vocabularyList) {
-            bw.append(vocabulary);
-            bw.append("::");
-            bw.append(gson.toJson(meaningMap.get(vocabulary)));
+            if (infoMap.containsKey(vocabulary)) {
+                bw.append(infoMap.get(vocabulary));
+            }
+            else {
+                bw.append(vocabulary);
+                bw.append("::");
+                bw.append(gson.toJson(meaningMap.get(vocabulary)));
+            }
             bw.append("\n");
         }
         bw.close();
@@ -60,7 +67,9 @@ public class AmericanHeritageXmlParse {
     public static void main(String[] args) throws Exception {
         for (String vocabulary : vocabularyList) {
             System.out.println(vocabulary);
-            parseVocabularyXml(vocabulary);
+            if (!infoMap.containsKey(vocabulary)) {
+                parseVocabularyXml(vocabulary);
+            }
         }
         writeToFile();
         System.out.println(count);
@@ -230,7 +239,7 @@ public class AmericanHeritageXmlParse {
     }
     private static void parseVocabularyXml(String vocabulary) throws Exception {
         
-        File vocabularyXmlFile = new File("/Users/xiaoxiao/workspace/resource/" + vocabulary.charAt(0) + "/" + vocabulary + ".xml");
+        File vocabularyXmlFile = new File("/Users/xiaoxiao/workspace/resource-dic/" + vocabulary.charAt(0) + "/" + vocabulary + ".xml");
         if (vocabularyXmlFile.exists() == false) {
             parseFromCiba(vocabulary);
             return;

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,19 +35,26 @@ public class AmericanHeritageGrap {
     private static Pattern characterPattern = Pattern.compile("([A-Z]+|[a-z]+|.+|,+)（\\S*）(\\s|\\S)*");
 
     public static void main(String[] args) throws IOException {
-        List<String> vocabularyList = Utils.getVocabularyList();
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/vocabulary-meaning")));
+        List<String> vocabularyList = Utils.getCET4VocabularyList();
+        Map<String, String> infoMap = Utils.getRawAHInfo();
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/xiaoxiao/workspace/vocabulary-sishu-utils/src/main/resources/cet4/target/vocabulary-meaning1")));
         for (String vocabulary : vocabularyList) {
-            System.out.println(vocabulary);
             if (vocabulary.indexOf(" ") < 0) {
-                List<String> meanings = getTranslate(vocabulary);
-                bw.append(vocabulary).append("\t");
-                for (String meaning : meanings) {
-                    bw.append(meaning + "\t");
-                    System.out.println(meaning);
+                System.out.println("has key: " + vocabulary);
+                if (infoMap.containsKey(vocabulary)) {
+                    bw.append(infoMap.get(vocabulary));
+                    bw.append("\n");
+                }
+                else {
+//                    System.out.println(vocabulary);
+//
+//                    List<String> meanings = getTranslate(vocabulary);
+//                    bw.append(vocabulary).append("\t");
+//                    for (String meaning : meanings) {
+//                        bw.append(meaning + "\t");
+//                    }
                 }
             }
-            bw.append("\n");
         }
         bw.close();
     }
